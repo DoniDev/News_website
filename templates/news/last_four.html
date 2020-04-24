@@ -1,0 +1,23 @@
+{% load static %}
+{% load tags %}
+{% for new in latest %}
+    <div class="col-12 col-lg-5">
+    <div class="single-blog-post featured-post-{{ forloop.counter }}">
+        <div class="post-thumb">
+            {% if new.image %}
+            <a href="{{ new.get_absolute_url }}"><img src="{{ new.image.url }}" alt=""></a>
+            {% endif %}
+        </div>
+        <div class="post-data">
+            <a href="#" class="post-catagory">{{ new.category }}</a>
+            <div class="post-meta">
+                <a href="{{ new.get_absolute_url }}" class="post-title">
+                    <h6>{{ new.body|markdown|truncatewords_html:25}}</h6>
+                </a>
+                <div class="d-flex align-items-center">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

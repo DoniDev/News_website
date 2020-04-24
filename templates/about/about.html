@@ -1,0 +1,60 @@
+{% extends 'base.html'%}
+{% load static %}
+{% load tags %}
+{% block title %}
+    <title>About Team</title>
+{% endblock %}
+
+{% block content %}
+    <section class="about-area">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-12">
+                    <h2>{{ about.title }}</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <p>{{ about.description|markdown|truncatewords_html:400}}</p>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <p>{{ about.description|markdown|truncatewords_html:1000 }}</p>
+                </div>
+            </div>
+
+            <div class="row align-items-center mt-80">
+                {% for stat in stats %}
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-cool-fact d-flex align-items-center">
+                        <h3><span class="counter">{{ stat.amount }}</span></h3>
+                        <div class="cf-text">
+                            <h6>{{ stat.title }}</h6>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="newspaper-team mb-30">
+        <div class="container">
+            <div class="row">
+                {% for t in team %}
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-team-member">
+                        <img src="{{ t.image.url }}" alt="">
+                        <div class="team-info">
+                            <h5>{{ t.name }}</h5>
+                            <h6>{{ t.job }}</h6>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

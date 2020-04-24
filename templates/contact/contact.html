@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+    <title>Contact</title>
+{% endblock %}
+
+{% block content %}
+    <div class="contact-area section-padding-0-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="contact-title">
+                        <h2>Contact us</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="contact-form-area">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                  {{ message }}
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                        <form action="#" method="POST">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-4">
+                    <!-- Single Contact Information -->
+                    <div class="single-contact-information mb-30">
+                        <h6>Address:</h6>
+                        <p>{{ details.address }}</p>
+                    </div>
+                    <!-- Single Contact Information -->
+                    <div class="single-contact-information mb-30">
+                        <h6>Phone:</h6>
+                        <p>{{ details.phone }}</p>
+                    </div>
+                    <!-- Single Contact Information -->
+                    <div class="single-contact-information mb-30">
+                        <h6>Email:</h6>
+                        <p>{{ details.email }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load static %}
+{% for most_co in most_com %}
+<div class="col-12 col-md-6">
+    <div class="single-blog-post style-3">
+        <div class="post-thumb">
+            <a href="#"><img src="{{ most_co.image.url }}" alt=""></a>
+        </div>
+        <div class="post-data">
+            <a href="#" class="post-catagory">{{ most_co.category }}</a>
+            <a href="{{ most_co.get_absolute_url }}" class="post-title">
+                <h6>{{ most_co.title }}</h6>
+            </a>
+            <div class="post-meta d-flex align-items-center">
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

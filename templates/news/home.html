@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tags %}
+{% block title %}
+    <title>News</title>
+{% endblock %}
+{% block content %}
+        <div class="featured-post-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-8">
+                        <div class="row">
+                              {% homepage %}
+                        </div>
+                    </div>
+
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        {% sidebar %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    <div class="popular-news-area section-padding-80-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="section-heading">
+                        <h6>Popular News</h6>
+                    </div>
+                    <div class="row">
+                        {% most_commented %}
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-4">
+                    <div class="section-heading">
+                        <h6>Info</h6>
+                    </div>
+
+
+                    {% include 'news/sidebar_second.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- ##### Footer Add Area Start ##### -->
+    <div class="footer-add-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="footer-add">
+                        <a href="#"><img src="{% static 'img/bg-img/footer-add.gif' %}" alt=""></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

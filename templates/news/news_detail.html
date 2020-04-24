@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% load static %}
+{% load crispy_forms_tags %}
+    {% block title %}
+
+        <title>{{ news.title }}</title>
+    {% endblock %}
+
+
+    {% block content %}
+
+    <div class="blog-area section-padding-0-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="blog-posts-area">
+                        <div class="single-blog-post featured-post single-post">
+                            <div class="post-thumb">
+                                {% if news.image %}
+                                <a href="#"><img src="{{ news.image.url }}" alt=""></a>
+                                {% endif %}
+                            </div>
+                            <div class="post-data">
+                                <a href="#" class="post-catagory">{{ news.category }}</a>
+                                <h1>{{ news.title }}</h1>
+                                <div class="post-meta">
+                                    <p>{{ news.body|markdown }}</p>
+                                    <div class="newspaper-post-like d-flex align-items-center justify-content-between">
+                                        <div class="newspaper-tags d-flex">
+                                            <div><h4>Tags:</h4>
+                                            <ul>
+                                            {% for tag in tags %}
+                                                <li class="text-secondary" style="font-size: 22px"><a href="{% url 'news-bt-tag' tag.slug %}">{{ tag.name }}</a></li>
+                                            {% empty %}
+                                                <li>No tags provided</li>
+                                            {% endfor %}
+                                            </ul>
+                                            </div>
+                                        </div>
+                                        <!-- Post Like & Post Comment -->
+                                        <div class="d-flex align-items-center post-like--comments">
+                                            <a href="#" class="post-comment"><img src="{% static 'img/core-img/chat.png' %}" alt=""> <span>{{ comment_count }}</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pager d-flex align-items-center justify-content-between">
+                            <div class="prev">
+                                <a href="#" class="active"><i class="fa fa-angle-left"></i> previous</a>
+                            </div>
+                            <div class="next">
+                                <a href="#">Next <i class="fa fa-angle-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="section-heading">
+                            <h6>Related</h6>
+                        </div>
+                        <div class="row">
+                            <!-- Single Post -->
+                            {% for r in related %}
+                            <div class="col-12 col-md-6">
+                                <div class="single-blog-post style-3 mb-80">
+                                    <div class="post-thumb">
+                                        <a href="{{ r.get_absolute_url }}"><img src="{{ r.image.url }}" alt=""></a>
+                                    </div>
+                                    <div class="post-data">
+                                        <a href="#" class="post-catagory">{{ r.category }}</a>
+                                        <a href="{{ r.get_absolute_url }}" class="post-title">
+                                            <h6>{{ r.body|markdown|truncatewords_html:20}}</h6>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <!-- Comment Area Start -->
+                        <div class="comment_area clearfix">
+                        {% with comments.count as total_comments %}
+                            <h5 class="title">{{ total_comments }} Comment{{ total_comments|pluralize}}</h5>
+                        {% endwith %}
+                            <ol>
+                                {% for comment in comments %}
+                                <!-- Single Comment Area -->
+                                <li class="single_comment_area">
+                                    <!-- Comment Content -->
+                                    <div class="comment-content d-flex">
+                                        <!-- Comment Author -->
+                                        <div class="comment-author">
+                                            <img src="{% static 'img/bg-img/30.jpg' %}" alt="author">
+                                        </div>
+                                        <!-- Comment Meta -->
+                                        <div class="comment-meta">
+                                            <a href="#" class="post-author">{{ comment.user.username }}</a>
+                                            <a href="#" class="post-date">{{ comment.created }}</a>
+                                            <p>{{ comment.message }}</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ol>
+                        </div>
+                        <div class="post-a-comment-area section-padding-80-0">
+                            <div class="contact-form-area">
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                          {{ message }}
+                                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                    {% endfor %}
+                                    {% else %}
+                                    <h4>Leave a comment</h4>
+                                    <form action="#" method="POST">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col-12 col-lg-6">
+                                                {{ comment_form|crispy}}
+                                            </div>
+                                            <div class="col-12 text-center">
+                                                <button class="btn newspaper-btn mt-30 w-100" type="submit">Submit Comment</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="blog-sidebar-area">
+                        <div class="latest-posts-widget mb-50">
+                            {% sidebar %}
+                        </div>
+
+                        {% include 'news/sidebar_second.html' %}
+
+                        <!-- Latest Comments Widget -->
+                        {% latest_com %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

@@ -1,0 +1,28 @@
+
+
+
+{% load static %}
+<nav class="classy-navbar justify-content-between" id="newspaperNav">
+    <div class="logo">
+        <a href="{% url 'home' %}"><img src="{% static 'img/core-img/logo.png' %}" alt=""></a>
+    </div>
+    <div class="classy-navbar-toggler">
+        <span class="navbarToggler"><span></span><span></span><span></span></span>
+    </div>
+    <div class="classy-menu">
+        <div class="classycloseIcon">
+            <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+        </div>
+        <div class="classynav">
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'news-list' %}">All</a></li>
+                {% for c in categories %}
+                    <li><a href="{% url 'category-list' c.name %}">{{ c.name }}</a></li>
+                {% endfor %}
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

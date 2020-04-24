@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tags %}
+{% block title %}
+    <title>News of  {{ category|upper }}</title>
+{% endblock %}
+
+
+{% block content %}
+    <div class="blog-area section-padding-0-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="blog-posts-area">
+                        {% if tag %}
+                            News tagged with : {{ tag.name }}
+                        {% endif %}
+                        {% for news_all in news_list %}
+                        <div class="single-blog-post featured-post mb-30">
+                            <div class="post-thumb">
+                                <a href="{{ news_all.get_absolute_url }}"><img src="{{ news_all.image.url }}" alt=""></a>
+                            </div>
+                            <div class="post-data">
+                                <a href="#" class="post-catagory">{{ news_all.category }}</a>
+                                <a href="{{ news_all.get_absolute_url }}" class="post-title">
+                                    <h6>{{ news_all.body|markdown|truncatewords_html:30 }}</h6>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if page_obj.has_previous %}
+                        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+                        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                        {% elif num > page_obj.number|add:'-3' and  num < page_obj.number|add:'3' %}
+                            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                     {% if page_obj.has_next %}
+                        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                     {% endif %}
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="blog-sidebar-area">
+                        <div class="latest-posts-widget mb-50">
+                            {% sidebar %}
+                        </div>
+                        {% include 'news/sidebar_second.html' %}
+                        <!-- Latest Comments Widget -->
+                        {% latest_com %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

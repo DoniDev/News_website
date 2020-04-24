@@ -1,0 +1,16 @@
+{% load static%}
+{% load tags %}
+<div class="latest-comments-widget">
+         <h3>Latest Comments</h3>
+        {% for latest_comment in latest_comments %}
+            <div class="single-comments d-flex">
+                <div class="comments-thumbnail mr-15">
+                    <img src="{% static 'img/bg-img/29.jpg' %}" alt="">
+                </div>
+                <div class="comments-text">
+                    <a href="{{ latest_comment.news.get_absolute_url }}">{{ latest_comment.user.username }} <span> on </span><span class="text-dark">{{ latest_comment.news.body|markdown|truncatewords_html:12 }}</span></a>
+                    <p>{{ latest_comment.created }}</p>
+                </div>
+            </div>
+        {% endfor %}
+</div>
