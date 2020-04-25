@@ -2,26 +2,62 @@
 {% load tags %}
 {% load static %}
 {% load crispy_forms_tags %}
+
     {% block title %}
 
         <title>{{ news.title }}</title>
+
     {% endblock %}
 
 
     {% block content %}
 
-    <div class="blog-area section-padding-0-80">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-lg-8">
-                    <div class="blog-posts-area">
-                        <div class="single-blog-post featured-post single-post">
-                            <div class="post-thumb">
-                                {% if news.image %}
-                                <a href="#"><img src="{{ news.image.url }}" alt=""></a>
-                                {% endif %}
+        {% if query %}
+
+            <div class="blog-area section-padding-0-80">
+                    <div class="container">
+                        <div class="row">
+                            <h1>News containing "{{ query }}"</h1>
+                            <div class="col-12 col-lg-8">
+                                <div class="blog-posts-area">
+                                    {% with results.count as total_search %}
+                                        <h3>Found {{ total_search }} result{{ total_search|pluralize }}</h3>
+                                    {% endwith %}
+                                    {% for news in results %}
+                                    <div class="single-blog-post featured-post mb-30">
+                                        <div class="post-thumb">
+                                            <a href="{{ news.get_absolute_url }}"><img src="{{ news.image.url }}" alt=""></a>
+                                        </div>
+                                        <div class="post-data">
+                                            <a href="#" class="post-catagory">{{ news.category }}</a>
+                                            <h3>{{ news.title }}</h3>
+                                            <a href="{{ news.get_absolute_url }}" class="post-title">
+                                                <h6>{{ news.body|markdown|truncatewords_html:30 }}</h6>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+{#                                {% include 'news/pagination.html' with page_number=news_all %}#}
                             </div>
-                            <div class="post-data">
+                        </div>
+                    </div>
+                </div>
+
+        {% else %}
+
+        <div class="blog-area section-padding-0-80">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <div class="blog-posts-area">
+                            <div class="single-blog-post featured-post single-post">
+                                <div class="post-thumb">
+                                    {% if news.image %}
+                                    <a href="#"><img src="{{ news.image.url }}" alt=""></a>
+                                    {% endif %}
+                                </div>
+                                <div class="post-data">
                                 <a href="#" class="post-catagory">{{ news.category }}</a>
                                 <h1>{{ news.title }}</h1>
                                 <div class="post-meta">
@@ -45,8 +81,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="pager d-flex align-items-center justify-content-between">
+                            </div>
+                            <div class="pager d-flex align-items-center justify-content-between">
                             <div class="prev">
                                 <a href="#" class="active"><i class="fa fa-angle-left"></i> previous</a>
                             </div>
@@ -54,10 +90,10 @@
                                 <a href="#">Next <i class="fa fa-angle-right"></i></a>
                             </div>
                         </div>
-                        <div class="section-heading">
+                            <div class="section-heading">
                             <h6>Related</h6>
                         </div>
-                        <div class="row">
+                            <div class="row">
                             <!-- Single Post -->
                             {% for r in related %}
                             <div class="col-12 col-md-6">
@@ -75,8 +111,8 @@
                             </div>
                             {% endfor %}
                         </div>
-                        <!-- Comment Area Start -->
-                        <div class="comment_area clearfix">
+                            <!-- Comment Area Start -->
+                            <div class="comment_area clearfix">
                         {% with comments.count as total_comments %}
                             <h5 class="title">{{ total_comments }} Comment{{ total_comments|pluralize}}</h5>
                         {% endwith %}
@@ -101,7 +137,7 @@
                                 {% endfor %}
                             </ol>
                         </div>
-                        <div class="post-a-comment-area section-padding-80-0">
+                            <div class="post-a-comment-area section-padding-80-0">
                             <div class="contact-form-area">
                                 {% if messages %}
                                     {% for message in messages %}
@@ -128,9 +164,9 @@
                                 {% endif %}
                             </div>
                         </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-12 col-lg-4">
+                    <div class="col-12 col-lg-4">
                     <div class="blog-sidebar-area">
                         <div class="latest-posts-widget mb-50">
                             {% sidebar %}
@@ -142,8 +178,10 @@
                         {% latest_com %}
                     </div>
                 </div>
+                </div>
             </div>
         </div>
-    </div>
+
+        {% endif %}
 
     {% endblock %}

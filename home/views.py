@@ -2,15 +2,44 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.views.generic import RedirectView
 from taggit.models import Tag
 from home.forms import CommentForm
 from . models import *
+from django.contrib.postgres.search import SearchVector,SearchQuery,SearchRank
+from . forms import SearchForm
+from django.contrib.postgres.search import  TrigramSimilarity
 
 
 def home(request):
 
-    return render(request,'news/home.html')
+    query = None
+    results =[]
+    form = SearchForm()
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            search_vector = SearchVector('title','body')
+            search_query = SearchQuery(query)
+            results = News.objects.annotate(search= search_vector,rank=SearchRank(search_vector,search_query))\
+                .filter(search=search_query).order_by('-rank')
+
+
+
+            # results = News.objects.annotate(similarity=TrigramSimilarity('title',query),)\
+            #     .filter(similarity__gte=0.1).order_by('-similarity')
+
+    else:
+        form = SearchForm()
+
+    context={
+        'form':form,
+        'query':query,
+        'results':results,
+    }
+    return render(request,'news/home.html',context=context)
+
+
 
 @login_required(login_url='login')
 def news_detail(request,year,month,day,slug):
@@ -19,6 +48,19 @@ def news_detail(request,year,month,day,slug):
     comments = news.comment_set.filter(active=True)
     comment_count = news.comment_set.count()
     tags = news.tags.all()
+
+    query = None
+    results = []
+    form = SearchForm()
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            search_vector = SearchVector('title', 'body')
+            search_query = SearchQuery(query)
+            results = News.objects.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)) \
+                .filter(search=search_query).order_by('-rank')
+
     new_comment = None
     if request.method == 'POST':
         comment_form = CommentForm(request.POST)
@@ -39,6 +81,9 @@ def news_detail(request,year,month,day,slug):
         'comment_form':comment_form,
         'comment_count':comment_count,
         'tags':tags,
+        'results':results,
+        'query':query,
+        'form':form,
 
 
     }
@@ -56,6 +101,18 @@ def category_list(request,category,tag_slug=None):
         tag = get_object_or_404(Tag,slug=tag_slug)
         news_list.filter(tags__in=[tag])
 
+    query = None
+    results = []
+    form = SearchForm()
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            search_vector = SearchVector('title', 'body')
+            search_query = SearchQuery(query)
+            results = News.objects.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)) \
+                .filter(search=search_query).order_by('-rank')
+
     paginator = Paginator(news_list,5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -67,6 +124,9 @@ def category_list(request,category,tag_slug=None):
         'page_obj':page_obj,
         'tag':tag,
         'category':category,
+        'results':results,
+        'query':query,
+        'form':form,
     }
 
     return render(request, 'news/category_list.html', context=context)
@@ -87,11 +147,32 @@ def news_list(request,tag_slug=None):
     except EmptyPage:
         news_all = paginator.page(paginator.num_pages)
 
+    query = None
+    results = []
+    form = SearchForm()
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            search_vector = SearchVector('title', 'body')
+            search_query = SearchQuery(query)
+            results = News.objects.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)) \
+                .filter(search=search_query).order_by('-rank')
+
     context={
         'news_all':news_all,
         'page_number':page_number,
         'tag':tag,
+        'results':results,
+        'query':query,
+        'form':form,
     }
     return render(request,'news/news_all.html',context=context)
+
+
+
+
+
+
 
 

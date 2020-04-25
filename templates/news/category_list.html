@@ -7,7 +7,42 @@
 
 
 {% block content %}
-    <div class="blog-area section-padding-0-80">
+
+    {% if query %}
+
+        <div class="blog-area section-padding-0-80">
+                    <div class="container">
+                        <div class="row">
+                            <h1>News containing "{{ query }}"</h1>
+                            <div class="col-12 col-lg-8">
+                                <div class="blog-posts-area">
+                                    {% with results.count as total_search %}
+                                        <h3>Found {{ total_search }} result{{ total_search|pluralize }}</h3>
+                                    {% endwith %}
+                                    {% for news in results %}
+                                    <div class="single-blog-post featured-post mb-30">
+                                        <div class="post-thumb">
+                                            <a href="{{ news.get_absolute_url }}"><img src="{{ news.image.url }}" alt=""></a>
+                                        </div>
+                                        <div class="post-data">
+                                            <a href="#" class="post-catagory">{{ news.category }}</a>
+                                            <h3>{{ news.title }}</h3>
+                                            <a href="{{ news.get_absolute_url }}" class="post-title">
+                                                <h6>{{ news.body|markdown|truncatewords_html:30 }}</h6>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+{#                                {% include 'news/pagination.html' with page_number=news_all %}#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+    {% else %}
+
+        <div class="blog-area section-padding-0-80">
         <div class="container">
             <div class="row">
                 <div class="col-12 col-lg-8">
@@ -61,6 +96,6 @@
         </div>
     </div>
 
-
+    {% endif %}
 
 {% endblock %}

@@ -38,5 +38,5 @@ def latest_com():
 
 @register.inclusion_tag('news/most_commented_news.html')
 def most_commented():
-    most_com = News.objects.annotate(comments=Count('comment')).order_by('-created')[:4]
+    most_com = News.objects.annotate(most_com=Count('comment')).order_by('-most_com')[:4]
     return {'most_com':most_com}

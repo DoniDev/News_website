@@ -2,9 +2,8 @@ from django.shortcuts import render
 from contact.forms import ContactForm
 from django.core.mail import send_mail
 from django.contrib import messages
-import os
-
 from contact.models import Contact
+import os
 
 
 def contact(request):

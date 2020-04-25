@@ -1,5 +1,6 @@
 {% load static %}
 {% load tags %}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -47,8 +48,8 @@
                                         {% endif %}
                                     </div>
                                     <div class="search-form">
-                                        <form action="#" method="post">
-                                            <input type="search" name="search" class="form-control" placeholder="Search">
+                                        <form action="#" method="GET">
+                                            {{ form.query }}
                                             <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                                         </form>
                                     </div>
@@ -58,14 +59,14 @@
                     </div>
                 </div>
             </div>
-        <div class="newspaper-main-menu" id="stickyMenu">
-            <div class="classy-nav-container breakpoint-off">
-                <div class="container">
-                    {% nav_dynamic %}
+            <div class="newspaper-main-menu" id="stickyMenu">
+                <div class="classy-nav-container breakpoint-off">
+                    <div class="container">
+                        {% nav_dynamic %}
+                    </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
 
 
     <div class="hero-area">
